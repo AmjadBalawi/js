@@ -152,5 +152,47 @@ document.addEventListener('keydown', event => {
     }
 });
 
+// Handle touch events for mobile devices
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+gameBoard.addEventListener('touchstart', handleTouchStart);
+gameBoard.addEventListener('touchmove', handleTouchMove);
+
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    touchEndX = event.touches[0].clientX;
+    touchEndY = event.touches[0].clientY;
+
+    let deltaX = touchEndX - touchStartX;
+    let deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // horizontal swipe
+        if (deltaX > 0) {
+            move('ArrowRight');
+        } else {
+            move('ArrowLeft');
+        }
+    } else {
+        // vertical swipe
+        if (deltaY > 0) {
+            move('ArrowDown');
+        } else {
+            move('ArrowUp');
+        }
+    }
+
+    touchStartX = touchEndX;
+    touchStartY = touchEndY;
+}
+
 // Initialize the board when the page loads
 initializeBoard();
