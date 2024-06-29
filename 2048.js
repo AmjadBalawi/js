@@ -4,33 +4,31 @@ const messageElement = document.getElementById('message');
 let board;
 let score;
 
+// Initialize the board and game state
 function initializeBoard() {
-    board = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ];
+    board = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 0));
     score = 0;
     addRandomTile();
     addRandomTile();
     drawBoard();
 }
 
+// Draw the board based on current state
 function drawBoard() {
     gameBoard.innerHTML = '';
-    for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 4; col++) {
+    board.forEach(row => {
+        row.forEach(cell => {
             const tile = document.createElement('div');
             tile.className = 'tile';
-            tile.innerText = board[row][col] !== 0 ? board[row][col] : '';
-            tile.style.backgroundColor = getTileColor(board[row][col]);
+            tile.innerText = cell !== 0 ? cell : '';
+            tile.style.backgroundColor = getTileColor(cell);
             gameBoard.appendChild(tile);
-        }
-    }
+        });
+    });
     scoreElement.innerText = `Score: ${score}`;
 }
 
+// Get tile color based on value
 function getTileColor(value) {
     switch (value) {
         case 0: return '#cdc1b4';
@@ -49,40 +47,68 @@ function getTileColor(value) {
     }
 }
 
+// Add a random tile (either 2 or 4) to an empty spot
 function addRandomTile() {
-    let emptyTiles = [];
-    for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 4; col++) {
-            if (board[row][col] === 0) {
-                emptyTiles.push({ row, col });
+    const emptyTiles = [];
+    board.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+            if (cell === 0) {
+                emptyTiles.push({ row: rowIndex, col: colIndex });
             }
-        }
-    }
+        });
+    });
+
     if (emptyTiles.length > 0) {
-        let { row, col } = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+        const { row, col } = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
         board[row][col] = Math.random() < 0.9 ? 2 : 4;
     }
 }
 
+// Handle user input for moving tiles
 function move(direction) {
     let moved = false;
-    if (direction === 'left') {
-        for (let row = 0; row < 4; row++) {
-            moved |= slide(row, 0, 1);
-        }
-    } else if (direction === 'right') {
-        for (let row = 0; row < 4; row++) {
-            moved |= slide(row, 3, -1);
-        }
-    } else if (direction === 'up') {
-        for (let col = 0; col < 4; col++) {
-            moved |= slide(0, col, 4);
-        }
-    } else if (direction === 'down') {
-        for (let col = 0; col < 4; col++) {
-            moved |= slide(3, col, -4);
+    let directionVectors = {
+        'ArrowUp': { row: -1, col: 0 },
+        'ArrowDown': { row: 1, col: 0 },
+        'ArrowLeft': { row: 0, col: -1 },
+        'ArrowRight': { row: 0, col: 1 }
+    };
+
+    const vector = directionVectors[direction];
+    const { row, col } = vector;
+
+    // Move tiles
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            if (board[i][j] !== 0) {
+                let currentRow = i;
+                let currentCol = j;
+                let nextRow = currentRow + row;
+                let nextCol = currentCol + col;
+
+                while (nextRow >= 0 && nextRow < 4 && nextCol >= 0 && nextCol < 4) {
+                    if (board[nextRow][nextCol] === 0) {
+                        board[nextRow][nextCol] = board[currentRow][currentCol];
+                        board[currentRow][currentCol] = 0;
+                        currentRow = nextRow;
+                        currentCol = nextCol;
+                        nextRow += row;
+                        nextCol += col;
+                        moved = true;
+                    } else if (board[nextRow][nextCol] === board[currentRow][currentCol]) {
+                        board[nextRow][nextCol] *= 2;
+                        score += board[nextRow][nextCol];
+                        board[currentRow][currentCol] = 0;
+                        moved = true;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
     }
+
     if (moved) {
         addRandomTile();
         drawBoard();
@@ -92,67 +118,39 @@ function move(direction) {
     }
 }
 
-function slide(start, end, step) {
-    let moved = false;
-    let merged = new Array(4).fill(false);
-    for (let i = start; i !== end + step; i += step) {
-        for (let j = start; j !== end + step; j += step) {
-            let current = step === 1 || step === -1 ? j : i;
-            let next = current + step;
-            while (next >= 0 && next < 4) {
-                let x1 = step === 1 || step === -1 ? current : i;
-                let y1 = step === 1 || step === -1 ? i : current;
-                let x2 = step === 1 || step === -1 ? next : i;
-                let y2 = step === 1 || step === -1 ? i : next;
-                if (board[x2][y2] === 0) {
-                    board[x2][y2] = board[x1][y1];
-                    board[x1][y1] = 0;
-                    current = next;
-                    next += step;
-                    moved = true;
-                } else if (board[x2][y2] === board[x1][y1] && !merged[next]) {
-                    board[x2][y2] *= 2;
-                    board[x1][y1] = 0;
-                    score += board[x2][y2];
-                    merged[next] = true;
-                    moved = true;
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-    return moved;
-}
-
+// Check if the game is over
 function isGameOver() {
-    for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 4; col++) {
-            if (board[row][col] === 0) {
-                return false;
-            }
-            if (col < 3 && board[row][col] === board[row][col + 1]) {
-                return false;
-            }
-            if (row < 3 && board[row][col] === board[row + 1][col]) {
+    // Check if there are any empty spaces
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            if (board[i][j] === 0) {
                 return false;
             }
         }
     }
+
+    // Check for possible moves (adjacent tiles with same value)
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            if (j < 3 && board[i][j] === board[i][j + 1]) {
+                return false;
+            }
+            if (i < 3 && board[i][j] === board[i + 1][j]) {
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') {
-        move('left');
-    } else if (event.key === 'ArrowRight') {
-        move('right');
-    } else if (event.key === 'ArrowUp') {
-        move('up');
-    } else if (event.key === 'ArrowDown') {
-        move('down');
+// Handle keyboard input
+document.addEventListener('keydown', event => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        move(event.key);
     }
 });
 
+// Initialize the board when the page loads
 initializeBoard();
