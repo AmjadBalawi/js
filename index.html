@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Rubik's Cube Game</title>
+    <title>2048 Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,55 +17,38 @@
         }
         #gameBoard {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
             gap: 5px;
+            background-color: #bbada0;
+            padding: 10px;
+            border-radius: 10px;
         }
-        .cell {
+        .tile {
             width: 100px;
             height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 24px;
-            border: 1px solid #000;
-            cursor: pointer;
-            user-select: none;
-        }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .controls button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
+            border-radius: 5px;
+            background-color: #cdc1b4;
         }
         .status {
-            margin-top: 10px;
-            font-size: 20px;
+            margin-top: 20px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <div>
-        <h1>2D Rubik's Cube Game</h1>
+        <h1>2048 Game</h1>
         <div id="gameBoard"></div>
-        <div class="controls">
-            <button onclick="rotateRow(0)">Rotate Top Row</button>
-            <button onclick="rotateRow(1)">Rotate Middle Row</button>
-            <button onclick="rotateRow(2)">Rotate Bottom Row</button>
-            <button onclick="rotateColumn(0)">Rotate Left Column</button>
-            <button onclick="rotateColumn(1)">Rotate Middle Column</button>
-            <button onclick="rotateColumn(2)">Rotate Right Column</button>
-        </div>
         <div class="status">
-            <p id="moves">Moves: 0</p>
-            <p id="timer">Time: 0s</p>
+            <p id="score">Score: 0</p>
+            <p id="message"></p>
         </div>
     </div>
-    <script src="rubik.js"></script>
+    <script src="2048.js"></script>
 </body>
 </html>
