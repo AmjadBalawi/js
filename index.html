@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
+    <title>Cube of Numbers Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,21 +14,45 @@
             margin: 0;
             background-color: #f4f4f4;
         }
-        canvas {
-            border: 1px solid #000;
-            display: block;
+        #gameBoard {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(4, 80px);
+            grid-template-rows: repeat(4, 80px);
         }
-        h1, p {
-            text-align: center;
+        .cube {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #007bff;
+            color: white;
+            font-size: 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .hidden {
+            background-color: #6c757d;
+            cursor: default;
+        }
+        #score {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        #timer {
+            margin-top: 20px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <div>
-        <h1>Snake Game</h1>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
-        <p>Score: <span id="score">0</span></p>
+        <h1>Cube of Numbers Game</h1>
+        <div id="gameBoard"></div>
+        <p id="score">Score: 0</p>
+        <p id="timer">Time: 0s</p>
     </div>
-    <script src="snake.js"></script>
+    <script src="cubeOfNumbers.js"></script>
 </body>
 </html>
