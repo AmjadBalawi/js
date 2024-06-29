@@ -3,47 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
+    <title>Snake Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
             background-color: #f4f4f4;
         }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        p {
-            line-height: 1.6;
-        }
-        .profile-pic {
+        canvas {
+            border: 1px solid #000;
             display: block;
-            margin: 0 auto 20px;
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
+        }
+        h1, p {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>About Me</h1>
-        <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
-        <p>Hello! My name is [Your Name], and I am a [Your Occupation/Role]. I am passionate about [Your Interests or Hobbies].</p>
-        <p>I have been working in the field of [Your Field] for [Number of Years] years, and I specialize in [Your Specialization]. My goal is to [Your Goals or Mission].</p>
-        <p>In my free time, I enjoy [Your Hobbies or Activities]. I also love to [Any Other Personal Information or Fun Fact].</p>
-        <p>Feel free to connect with me on [Your Social Media Links or Contact Information].</p>
+    <div>
+        <h1>Snake Game</h1>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <p>Score: <span id="score">0</span></p>
     </div>
+    <script src="snake.js"></script>
 </body>
 </html>
-
