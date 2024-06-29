@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cube of Numbers Game</title>
+    <title>2D Rubik's Cube Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,46 +13,59 @@
             height: 100vh;
             margin: 0;
             background-color: #f4f4f4;
+            flex-direction: column;
         }
         #gameBoard {
             display: grid;
-            gap: 10px;
-            grid-template-columns: repeat(4, 80px);
-            grid-template-rows: repeat(4, 80px);
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
         }
-        .cube {
-            width: 80px;
-            height: 80px;
+        .cell {
+            width: 100px;
+            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #007bff;
-            color: white;
             font-size: 24px;
-            border-radius: 8px;
+            border: 1px solid #000;
             cursor: pointer;
+            user-select: none;
         }
-        .hidden {
-            background-color: #6c757d;
-            cursor: default;
-        }
-        #score {
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-top: 20px;
-            font-size: 24px;
         }
-        #timer {
-            margin-top: 20px;
-            font-size: 24px;
+        .controls button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
     <div>
-        <h1>Cube of Numbers Game</h1>
+        <h1>2D Rubik's Cube Game</h1>
         <div id="gameBoard"></div>
-        <p id="score">Score: 0</p>
-        <p id="timer">Time: 0s</p>
+        <div class="controls">
+            <button onclick="rotateRow(0)">Rotate Top Row</button>
+            <button onclick="rotateRow(1)">Rotate Middle Row</button>
+            <button onclick="rotateRow(2)">Rotate Bottom Row</button>
+            <button onclick="rotateColumn(0)">Rotate Left Column</button>
+            <button onclick="rotateColumn(1)">Rotate Middle Column</button>
+            <button onclick="rotateColumn(2)">Rotate Right Column</button>
+        </div>
+        <div class="status">
+            <p id="moves">Moves: 0</p>
+            <p id="timer">Time: 0s</p>
+        </div>
     </div>
-    <script src="cubeOfNumbers.js"></script>
+    <script src="rubik.js"></script>
 </body>
 </html>
