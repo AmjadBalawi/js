@@ -8,7 +8,7 @@ const columns = canvas.width / scale;
 
 let snake;
 let food;
-let score;
+let score = 0;
 
 (function setup() {
     snake = new Snake();
@@ -41,6 +41,7 @@ function Snake() {
     this.body[0] = { x: 10 * scale, y: 10 * scale };
     this.xSpeed = scale;
     this.ySpeed = 0;
+    this.total = 0;
 
     this.draw = function() {
         for (let i = 0; i < this.body.length; i++) {
@@ -56,6 +57,11 @@ function Snake() {
 
         this.body[0].x += this.xSpeed;
         this.body[0].y += this.ySpeed;
+
+        if (this.total > 0) {
+            this.body.push({});
+            this.total--;
+        }
     };
 
     this.changeDirection = function(direction) {
@@ -89,7 +95,7 @@ function Snake() {
 
     this.eat = function(food) {
         if (this.body[0].x === food.x && this.body[0].y === food.y) {
-            this.body.push({});
+            this.total += 3;  // Make the snake grow by 3 segments
             return true;
         }
         return false;
